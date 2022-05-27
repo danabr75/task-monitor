@@ -18,12 +18,15 @@
 
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
+          <% if @current_user %>
           <li class="nav-item active">
             <%= button_to "logout", destroy_user_session_path, method: :delete  %>
           </li>
+          <% end %>
         </ul>
       </div>
     </nav>
+
 
     <%= yield %>
   </body>

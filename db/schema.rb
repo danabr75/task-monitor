@@ -14,6 +14,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_27_192025) do
   create_table "tasks", force: :cascade do |t|
     t.string "name"
     t.string "token"
+    t.datetime "last_heartbeat_at"
+    t.datetime "sent_alert_notification_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

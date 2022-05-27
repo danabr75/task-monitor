@@ -1,4 +1,4 @@
-class ApplicationMailer < ActionMailer::Base
+class TaskMailer < ActionMailer::Base
   default from: ENV["DEFAULT_FROM_ADDRESS"]
   layout "mailer"
 end

@@ -21,7 +21,7 @@ class User < ApplicationRecord
     self.save(validate: false)
   end
 
-  def create_new_user! email, password
+  def self.create_new_user! email, password
     User.create!(email: email, password: password)
   end
 

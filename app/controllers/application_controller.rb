@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!, only: [:homepage]
 
   def homepage
+    Task.check_for_missing_heartbeats
   end
 
   protected

@@ -8,6 +8,7 @@ gem 'devise'
 gem 'sass-rails', '>= 6'
 gem 'jquery-rails'
 gem 'bootstrap'
+gem 'sendpulse'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.3"

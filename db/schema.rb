@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_27_192025) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_28_054619) do
   create_table "tasks", force: :cascade do |t|
     t.string "name"
     t.string "token"
@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_27_192025) do
     t.datetime "sent_alert_notification_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "ignore"
   end
 
   create_table "users", force: :cascade do |t|

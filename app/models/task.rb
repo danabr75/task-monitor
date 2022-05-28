@@ -22,11 +22,19 @@ class Task < ApplicationRecord
 
   def mark_inactive
     self.update!(sent_alert_notification_at: Time.now)
-    # if only
-    # TaskMailer.send_inactive(self).deliver
+    if ignore != true
+      # TaskMailer.send_inactive(self).deliver
+    end
   end
 
   def mark_active
     update!(last_heartbeat_at: Time.now, sent_alert_notification_at: nil)
+  end
+
+  def mark_ignore
+    update!(ignore: true)
+  end
+  def mark_unignore
+    update!(ignore: false)
   end
 end

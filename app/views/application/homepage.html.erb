@@ -1,4 +1,4 @@
-Tasks
+<h2>Tasks</h2>
 <div class="container">
   <table id="example" class="table table-striped table-bordered" style="width: 1000px;">
     <thead>
@@ -9,7 +9,7 @@ Tasks
     </thead>
     <tbody>
       <% Task.all.each do |t| %>
-      <tr>
+      <tr class="<%= 'bg-secondary text-white' if t.ignore %>">
         <td>
           <%= t.name %><%#= t.id %>
         </td>
@@ -20,9 +20,14 @@ Tasks
           <%= t.active? %>
         </td>
         <td>
-          <%#= t.active? %>
           <% if !t.active? %>
             <%= button_to "Mark As Active", mark_as_active_task_path(t)  %>
+          <% end %>
+          <% if t.ignore %>
+            <%= button_to "Mark As Unignore", mark_as_unignore_task_path(t)  %>
+          <% end %>
+          <% if !t.ignore %>
+            <%= button_to "Mark As Ignore", mark_as_ignore_task_path(t)  %>
           <% end %>
         </td>
       </tr>

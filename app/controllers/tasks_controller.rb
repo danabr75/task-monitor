@@ -29,4 +29,14 @@ class TasksController < ApplicationController
     t&.mark_active
     redirect_to root_url
   end
+  def mark_as_ignore
+    t = Task.find(params[:id])
+    t&.mark_ignore
+    redirect_to root_url
+  end
+  def mark_as_unignore
+    t = Task.find(params[:id])
+    t&.mark_unignore
+    redirect_to root_url
+  end
 end

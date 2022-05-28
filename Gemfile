@@ -12,6 +12,7 @@ gem 'rest-client'
 
 # https://docs.sendgrid.com/for-developers/sending-email/rubyonrails
 # gem 'sendgrid-ruby'
+gem 'twilio-ruby'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.3"

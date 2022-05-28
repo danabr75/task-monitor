@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   match '/heartbeat',  to: 'tasks#heartbeat', via: [:get, :post]
+  match '/failure',    to: 'tasks#failure', via: [:get, :post]
 
   # Defines the root path route ("/")
   root "application#homepage"

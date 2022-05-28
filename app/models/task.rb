@@ -22,7 +22,8 @@ class Task < ApplicationRecord
 
   def mark_inactive
     self.update!(sent_alert_notification_at: Time.now)
-    TaskMailer.send_inactive(self).deliver
+    # if only
+    # TaskMailer.send_inactive(self).deliver
   end
 
   def mark_active

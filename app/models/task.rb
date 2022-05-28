@@ -4,6 +4,8 @@ class Task < ApplicationRecord
     ENV["TASK_INACTIVE_AFTER_MINUTES"].present? ? ENV["TASK_INACTIVE_AFTER_MINUTES"].minutes : 20.minutes
   )
 
+  scope :ordered_by_ignore, -> { order(ignore: :asc) }
+
   def self.create_new_task! name
     t = Task.create!(name: name, token: SecureRandom.hex, last_heartbeat_at: Time.now)
     return t.token

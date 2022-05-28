@@ -8,7 +8,7 @@
       <th>actions</th>
     </thead>
     <tbody>
-      <% Task.all.each do |t| %>
+      <% Task.ordered_by_ignore.each do |t| %>
       <tr class="<%= 'bg-secondary text-white' if t.ignore %>">
         <td>
           <%= t.name %><%#= t.id %>

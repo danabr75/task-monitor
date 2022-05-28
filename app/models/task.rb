@@ -7,10 +7,56 @@ class Task < ApplicationRecord
   scope :ordered_by_name, -> { order(name: :asc) }
   scope :ignored, -> { where(ignore: true) }
   scope :unignored, -> { where(ignore: [false, nil]) }
+  has_many :ignorable_windows
+
+  def self.temp_ignored_ids
+    ids = []
+    includes(:ignorable_windows).all.each do |t|
+      t.ignorable_windows.each do |iw|
+        if iw.time_window_active?
+          ids << t.id
+        end
+      end
+    end
+    return ids
+  end
+
+  def is_temp_ignored?
+    result = false
+    ignorable_windows.each do |iw|
+      if iw.time_window_active?
+        result = true
+        break
+      end
+    end
+    return result
+  end
+
+  def self.temp_ignored
+    where(id: temp_ignored_ids)
+  end
+  def self.temp_unignored
+    where.not(id: temp_ignored_ids)
+  end
+
+  def temp_time_windows
+    result = ""
+    ignorable_windows.pluck(:start_time, :stop_time).each do |group|
+      result << "#{group[0]}-#{group[1]}\n"
+    end
+    return result
+  end
 
   def self.create_new_task! name
-    t = Task.create!(name: name, token: SecureRandom.hex, last_heartbeat_at: Time.now)
+    t = Task.create!(name: name, token: SecureRandom.hex, last_heartbeat_at: Time.now.utc)
     return t.token
+  end
+
+  def create_new_ignorable_window! start_time, stop_time
+    ignorable_windows.create!({
+      start_time: start_time,
+      stop_time: stop_time,
+    })
   end
 
   # In lieu of a clock, just check when pinged.
@@ -25,14 +71,19 @@ class Task < ApplicationRecord
   end
 
   def mark_inactive
-    self.update!(sent_alert_notification_at: Time.now)
-    if ignore != true
-      # TaskMailer.send_inactive(self).deliver
+    # ignore deliberate calls for inactivity if in expected ignored time range
+    if is_temp_ignored?
+      # do nothing
+    else
+      self.update!(sent_alert_notification_at: Time.now.utc)
+      if ignore != true
+        # TaskMailer.send_inactive(self).deliver
+      end
     end
   end
 
   def mark_active
-    update!(last_heartbeat_at: Time.now, sent_alert_notification_at: nil)
+    update!(last_heartbeat_at: Time.now.utc, sent_alert_notification_at: nil)
   end
 
   def mark_ignore

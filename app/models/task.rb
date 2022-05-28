@@ -1,8 +1,8 @@
-require 'sendpulse/smtp'
-
 class Task < ApplicationRecord
 
-  CONSIDERED_INACTIVE_AFTER = 10.minutes
+  CONSIDERED_INACTIVE_AFTER = (
+    ENV["TASK_INACTIVE_AFTER_MINUTES"].present? ? ENV["TASK_INACTIVE_AFTER_MINUTES"].minutes : 20.minutes
+  )
 
   def self.create_new_task! name
     t = Task.create!(name: name, token: SecureRandom.hex, last_heartbeat_at: Time.now)
@@ -22,28 +22,7 @@ class Task < ApplicationRecord
 
   def mark_inactive
     self.update!(sent_alert_notification_at: Time.now)
-    # send email or text alert
-    # - https://sendpulse.com/integrations/api
-    # - https://github.com/sendpulse/sendpulse-rest-api-ruby
-    # - https://login.sendpulse.com/settings/#api
-    email = {
-      html: "<html><body><h1>#{self.name} Inactive</h1></body></html>",
-      text: self.name,
-      subject: "#{self.name} Inactive",
-      from: {
-        name: 'Sender',
-        email: ENV["DEFAULT_FROM_ADDRESS"]
-      },
-      to: [
-        {
-          name: "Reciever",
-          email: ENV["DEFAULT_TO_ADDRESS"]
-        }
-      ]
-    }
-
-    sendpulse_smtp = SendPulse::Smtp.new(ENV["EMAIL_CLIENT_ID"], ENV["EMAIL_CLIENT_SECRET"], 'https', nil)
-    sendpulse_smtp.send_email(email)
+    TaskMailer.send_inactive(self).deliver
   end
 
   def mark_active

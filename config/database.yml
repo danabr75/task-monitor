@@ -23,5 +23,5 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  database: rails-portal_prod
+  database: task-monitor-database
   pool: 10

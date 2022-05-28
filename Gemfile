@@ -8,6 +8,7 @@ gem 'devise'
 gem 'sass-rails', '>= 6'
 gem 'jquery-rails'
 gem 'bootstrap'
+gem 'rest-client'
 
 # https://docs.sendgrid.com/for-developers/sending-email/rubyonrails
 # gem 'sendgrid-ruby'

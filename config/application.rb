@@ -57,20 +57,22 @@ module TaskMonitor
     # }
 
     # mailtrap - https://devcenter.heroku.com/articles/mailtrap#using-with-rails-3-x-6-x
-    require 'rest-client'
-    require 'json'
-    response = RestClient.get "https://mailtrap.io/api/v1/inboxes.json?api_token=#{ENV['MAILTRAP_API_TOKEN']}"
-    first_inbox = JSON.parse(response)[0] # get first inbox
-    config.action_mailer.delivery_method = :smtp
-    puts "USING MAILTRAP USERNAME: #{first_inbox['username']} on domain: #{first_inbox['domain']}"
-    config.action_mailer.smtp_settings = {
-      :user_name => first_inbox['username'],
-      :password => first_inbox['password'],
-      :address => first_inbox['domain'],
-      :domain => first_inbox['domain'],
-      :port => first_inbox['smtp_ports'][0],
-      :authentication => :plain
-    }
+    if Rails.env.production?
+      require 'rest-client'
+      require 'json'
+      response = RestClient.get "https://mailtrap.io/api/v1/inboxes.json?api_token=#{ENV['MAILTRAP_API_TOKEN']}"
+      first_inbox = JSON.parse(response)[0] # get first inbox
+      config.action_mailer.delivery_method = :smtp
+      puts "USING MAILTRAP USERNAME: #{first_inbox['username']} on domain: #{first_inbox['domain']}"
+      config.action_mailer.smtp_settings = {
+        :user_name => first_inbox['username'],
+        :password => first_inbox['password'],
+        :address => first_inbox['domain'],
+        :domain => first_inbox['domain'],
+        :port => first_inbox['smtp_ports'][0],
+        :authentication => :plain
+      }
+    end
 
   end
 end

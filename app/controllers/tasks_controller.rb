@@ -23,4 +23,10 @@ class TasksController < ApplicationController
     Task.check_for_missing_heartbeats
     render json: nil, status: :ok and return
   end
+
+  def mark_as_active
+    t = Task.find(params[:id])
+    t&.mark_active
+    format.html { redirect_to root_path }
+  end
 end

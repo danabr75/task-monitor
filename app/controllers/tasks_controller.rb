@@ -1,8 +1,8 @@
 class TasksController < ApplicationController
   # allow the devise controller to do whatever
-  before_action :authenticate_user!, except: [:heartbeat]
+  before_action :authenticate_user!, except: [:heartbeat, :failure]
 
-  
+
   def heartbeat
     if params[:token].present?
       t = Task.find_by_token(params[:token])

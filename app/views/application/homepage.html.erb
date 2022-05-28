@@ -21,7 +21,7 @@ Tasks
         </td>
         <td>
           <% if !t.active? %>
-            <%= button_to "Mark As Active", destroy_user_session_path, method: :delete  %>
+            <%= button_to "Mark As Active", mark_as_active_task_path  %>
           <% end %>
         </td>
       </tr>

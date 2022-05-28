@@ -38,21 +38,39 @@ module TaskMonitor
     #   # :enable_starttls_auto => true
     # }
 
+    # sendgrid twilio
+    # config.action_mailer.delivery_method = :smtp
+    # config.action_mailer.raise_delivery_errors = true
+    # config.action_mailer.perform_deliveries = true
+    # host = ENV["HOST_DOMAIN"] #replace with your own url
+    # config.action_mailer.default_url_options = { host: host }
+    # config.action_mailer.smtp_settings = {
+    #   # :user_name => 'apikey', # This is the string literal 'apikey', NOT the ID of your API key
+    #   # :password => '<SENDGRID_API_KEY>', # This is the secret sendgrid API key which was issued during API key creation
+    #   user_name: ENV["SENDGRID_USERNAME"],
+    #   password: ENV["SENDGRID_PASSWORD"],
+    #   :domain => 'yourdomain.com',
+    #   :address => 'smtp.sendgrid.net',
+    #   :port => 587,
+    #   :authentication => :plain,
+    #   :enable_starttls_auto => true
+    # }
+
+    # mailtrap - https://devcenter.heroku.com/articles/mailtrap#using-with-rails-3-x-6-x
+    require 'rest-client'
+    require 'json'
+    response = RestClient.get "https://mailtrap.io/api/v1/inboxes.json?api_token=#{ENV['MAILTRAP_API_TOKEN']}"
+    first_inbox = JSON.parse(response)[0] # get first inbox
     config.action_mailer.delivery_method = :smtp
-    config.action_mailer.raise_delivery_errors = true
-    config.action_mailer.perform_deliveries = true
-    host = ENV["HOST_DOMAIN"] #replace with your own url
-    config.action_mailer.default_url_options = { host: host }
+    puts "USING MAILTRAP USERNAME: #{first_inbox['username']} on domain: #{first_inbox['domain']}"
     config.action_mailer.smtp_settings = {
-      # :user_name => 'apikey', # This is the string literal 'apikey', NOT the ID of your API key
-      # :password => '<SENDGRID_API_KEY>', # This is the secret sendgrid API key which was issued during API key creation
-      user_name: ENV["SENDGRID_USERNAME"],
-      password: ENV["SENDGRID_PASSWORD"],
-      :domain => 'yourdomain.com',
-      :address => 'smtp.sendgrid.net',
-      :port => 587,
-      :authentication => :plain,
-      :enable_starttls_auto => true
+      :user_name => first_inbox['username'],
+      :password => first_inbox['password'],
+      :address => first_inbox['domain'],
+      :domain => first_inbox['domain'],
+      :port => first_inbox['smtp_ports'][0],
+      :authentication => :plain
     }
+
   end
 end

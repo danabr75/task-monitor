@@ -11,7 +11,7 @@ Tasks
       <% Task.all.each do |t| %>
       <tr>
         <td>
-          <%= t.name %>
+          <%= t.name %><%#= t.id %>
         </td>
         <td>
           <%= t.last_heartbeat_at %>
@@ -20,8 +20,9 @@ Tasks
           <%= t.active? %>
         </td>
         <td>
+          <%#= t.active? %>
           <% if !t.active? %>
-            <%= button_to "Mark As Active", mark_as_active_task_path  %>
+            <%= button_to "Mark As Active", mark_as_active_task_path(t)  %>
           <% end %>
         </td>
       </tr>

@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   resources :tasks, only: [:mark_as_active] do
     member do
-      get :mark_as_active
+      post :mark_as_active
     end
   end
 

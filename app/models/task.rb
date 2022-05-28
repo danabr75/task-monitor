@@ -11,7 +11,7 @@ class Task < ApplicationRecord
 
   # In lieu of a clock, just check when pinged.
   def self.check_for_missing_heartbeats
-    Task.where(sent_alert_notification_at: nil).where("last_heartbeat_at > ?", CONSIDERED_INACTIVE_AFTER.ago).each do |t|
+    Task.where(sent_alert_notification_at: nil).where("last_heartbeat_at < ?", CONSIDERED_INACTIVE_AFTER.ago).each do |t|
       t.mark_inactive
     end
   end
@@ -27,6 +27,6 @@ class Task < ApplicationRecord
   end
 
   def mark_active
-    self.update!(last_heartbeat_at: Time.now, sent_alert_notification_at: nil)
+    update!(last_heartbeat_at: Time.now, sent_alert_notification_at: nil)
   end
 end

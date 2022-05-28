@@ -27,6 +27,6 @@ class TasksController < ApplicationController
   def mark_as_active
     t = Task.find(params[:id])
     t&.mark_active
-    format.html { redirect_to root_path }
+    redirect_to root_url
   end
 end

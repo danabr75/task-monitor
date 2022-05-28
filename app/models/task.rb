@@ -17,7 +17,7 @@ class Task < ApplicationRecord
   end
 
   def active?
-    last_heartbeat_at > CONSIDERED_INACTIVE_AFTER.ago
+    last_heartbeat_at > CONSIDERED_INACTIVE_AFTER.ago && sent_alert_notification_at.nil?
   end
 
   def mark_inactive

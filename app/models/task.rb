@@ -7,6 +7,8 @@ class Task < ApplicationRecord
   scope :ordered_by_name, -> { order(name: :asc) }
   scope :ignored, -> { where(ignore: true) }
   scope :unignored, -> { where(ignore: [false, nil]) }
+  scope :custom_inactive_after, -> { where.not(inactive_after_mins: nil) }
+  scope :default_inactive_after, -> { where(inactive_after_mins: nil) }
   has_many :ignorable_windows
 
   def self.temp_ignored_ids
@@ -61,8 +63,27 @@ class Task < ApplicationRecord
 
   # In lieu of a clock, just check when pinged.
   def self.check_for_missing_heartbeats
-    Task.where(sent_alert_notification_at: nil).where("last_heartbeat_at < ?", CONSIDERED_INACTIVE_AFTER.ago).each do |t|
+    task_query = Task.where(sent_alert_notification_at: nil)
+    
+    # Mobile tasks can lose contact for a while, but still be operatable
+    task_query.custom_inactive_after.each do |t|
+      # puts "Custom: #{t.id}"
+      if t.last_heartbeat_at < t.inactive_after_mins.minutes.ago
+        t.mark_inactive
+      end
+    end
+
+    task_query.default_inactive_after.where("last_heartbeat_at < ?", CONSIDERED_INACTIVE_AFTER.ago).each do |t|
+      # puts "Default: #{t.id}"
       t.mark_inactive
+    end
+  end
+
+  def allowed_inactivity_to_s
+    if inactive_after_mins
+      inactive_after_mins.minutes.inspect
+    else
+      CONSIDERED_INACTIVE_AFTER.inspect
     end
   end
 

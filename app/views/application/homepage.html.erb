@@ -6,6 +6,7 @@
       <th>Last Heard From</th>
       <th>Active</th>
       <th>Ignore Window (UTC)</th>
+      <th>Allowed Inactivity</th>
       <th>actions</th>
     </thead>
     <tbody>
@@ -22,6 +23,9 @@
           </td>
           <td>
             <%= t.temp_time_windows %>
+          </td>
+          <td>
+            <%= t.allowed_inactivity_to_s %>
           </td>
           <td>
             <% if !t.active? %>

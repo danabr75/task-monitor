@@ -78,8 +78,12 @@ class Task < ApplicationRecord
       self.update!(sent_alert_notification_at: Time.now.utc)
       if ignore != true
         # TaskMailer.send_inactive(self).deliver
+        if ENV["ENABLE_SMS"] == "true"
+          SmsTexter.send_text("#{self.name} - Marked Inactive")
+        end
       end
     end
+    return true
   end
 
   def mark_active

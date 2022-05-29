@@ -10,6 +10,10 @@ module TaskMonitor
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
+
+    # config.eager_load_paths += %W(#{Rails.root}/lib #{Rails.root}/lib/concerns #{Rails.root}/lib/middleware #{Rails.root}/app/workers/)
+    config.eager_load_paths += %W(#{Rails.root}/lib #{Rails.root}/lib/concerns)
+
     # config.time_zone = "UTC"
     # config.active_record.default_timezone = :utc
     # config.time_zone = 'Eastern Time (US & Canada)'

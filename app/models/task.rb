@@ -1,7 +1,7 @@
 class Task < ApplicationRecord
 
   CONSIDERED_INACTIVE_AFTER = (
-    ENV["TASK_INACTIVE_AFTER_MINUTES"].present? ? ENV["TASK_INACTIVE_AFTER_MINUTES"].minutes : 20.minutes
+    ENV["TASK_INACTIVE_AFTER_MINUTES"].present? ? ENV["TASK_INACTIVE_AFTER_MINUTES"].to_i.minutes : 30.minutes
   )
 
   scope :ordered_by_name, -> { order(name: :asc) }

@@ -31,7 +31,7 @@ production:
   encoding: unicode
   database: <%= Rails.configuration.database_credentials["POSTGRES_DB_NAME"] %>
   pool: 10
-  ur: <%= ENV["DATABASE_URL"] %>
+  url: <%= ENV["DATABASE_URL"] %>
   # host: <%= Rails.configuration.database_credentials["POSTGRES_WRITER_HOST"] %>
   # port: <%= Rails.configuration.database_credentials["POSTGRES_PORT"] %>
   # username: <%= Rails.configuration.database_credentials["POSTGRES_WRITER_USERNAME"] %>

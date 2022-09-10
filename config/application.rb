@@ -95,6 +95,12 @@ module TaskMonitor
     # end
     # config.action_mailer.delivery_method = :smtp
     # config.action_mailer.default_url_options = { host: host }
-
+    config.database_credentials = {}
+    if ENV['BOREALIS_PG_BLUE_SSH_TUNNEL_BPG_CONNECTION_INFO'].present?
+      borealis_db_key_value_pairs = ENV['BOREALIS_PG_BLUE_SSH_TUNNEL_BPG_CONNECTION_INFO'].split('|').collect{|v| v.split(':=')}
+      borealis_db_key_value_pairs.each do |key, value|
+        config.database_credentials[key] = value
+      end
+    end
   end
 end

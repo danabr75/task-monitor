@@ -14,8 +14,8 @@ class Task < ApplicationRecord
   scope :ordered_by_name, -> { order(name: :asc) }
   scope :ignored, -> { where(ignore: true) }
   scope :unignored, -> { where(ignore: [false, nil]) }
-  scope :custom_inactive_after, -> { where.not(inactive_after_mins: nil) }
-  scope :default_inactive_after, -> { where(inactive_after_mins: nil) }
+  scope :custom_inactive_after, -> { where.not(inactive_after_mins: nil).where.not(last_heartbeat_at: nil) }
+  scope :default_inactive_after, -> { where(inactive_after_mins: nil).where.not(last_heartbeat_at: nil) }
 
   has_many :ignorable_windows, dependent: :destroy
   accepts_nested_attributes_for :ignorable_windows, allow_destroy: true
@@ -99,6 +99,7 @@ class Task < ApplicationRecord
   end
 
   def active?
+    return false if last_heartbeat_at.nil?
     last_heartbeat_at > CONSIDERED_INACTIVE_AFTER.ago && sent_alert_notification_at.nil?
   end
 

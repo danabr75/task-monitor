@@ -1,7 +1,7 @@
 class ApplicationRecord < ActiveRecord::Base
   primary_abstract_class
 
-  COPYABLE_FIELDS_AND_ASSOCIATIONS_AND_ASSOCIATIONS = []
+  COPYABLE_FIELDS_AND_ASSOCIATIONS = []
 
   # this apparently depended on our activerecord patch where we allowed 'accepted_nested_attribs' to match assocs on attribs other than IDs.
   def create_assignable_attributes options = {}
@@ -18,7 +18,7 @@ class ApplicationRecord < ActiveRecord::Base
 
     errors = []
 
-    self.class::COPYABLE_FIELDS_AND_ASSOCIATIONS_AND_ASSOCIATIONS.each do |field|
+    self.class::COPYABLE_FIELDS_AND_ASSOCIATIONS.each do |field|
       if !options[:only].nil?
         if options[:only].include?(field.to_sym)
           # GOOD TO GO

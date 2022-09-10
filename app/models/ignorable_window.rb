@@ -1,4 +1,8 @@
 class IgnorableWindow < ApplicationRecord
+  COPYABLE_FIELDS_AND_ASSOCIATIONS = %w[
+    start_time
+    stop_time
+  ]
 
   RELATIVE_TIME_WINDOW = Proc.new { |iw|
     current_time = Time.now.utc

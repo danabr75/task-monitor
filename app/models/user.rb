@@ -1,4 +1,8 @@
 class User < ApplicationRecord
+  COPYABLE_FIELDS_AND_ASSOCIATIONS = %w[
+    email
+  ]
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :recoverable, :rememberable, :validatable

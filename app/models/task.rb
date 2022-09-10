@@ -1,4 +1,11 @@
 class Task < ApplicationRecord
+  COPYABLE_FIELDS_AND_ASSOCIATIONS = %w[
+    name
+    token
+    ignore
+    inactive_after_mins
+    ignorable_windows
+  ]
 
   CONSIDERED_INACTIVE_AFTER = (
     ENV["TASK_INACTIVE_AFTER_MINUTES"].present? ? ENV["TASK_INACTIVE_AFTER_MINUTES"].to_i.minutes : 30.minutes
@@ -9,7 +16,9 @@ class Task < ApplicationRecord
   scope :unignored, -> { where(ignore: [false, nil]) }
   scope :custom_inactive_after, -> { where.not(inactive_after_mins: nil) }
   scope :default_inactive_after, -> { where(inactive_after_mins: nil) }
-  has_many :ignorable_windows
+
+  has_many :ignorable_windows, dependent: :destroy
+  accepts_nested_attributes_for :ignorable_windows, allow_destroy: true
 
   def self.temp_ignored_ids
     ids = []
@@ -54,6 +63,8 @@ class Task < ApplicationRecord
     return t.token
   end
 
+  # t = Task.find_by_name('')
+  # t.create_new_ignorable_window!("15:00", "15:20")
   def create_new_ignorable_window! start_time, stop_time
     ignorable_windows.create!({
       start_time: start_time,

@@ -1,12 +1,16 @@
 class ApplicationController < ActionController::Base
   # allow the devise controller to do whatever
-  before_action :authenticate_user!, only: [:homepage]
+  before_action :authenticate_user!
+  before_action :check_for_missing_pulses, unless: -> { Rails.configuration.clock_or_workers_running }
 
   def homepage
-    Task.check_for_missing_heartbeats
   end
 
   protected
+
+  def check_for_missing_pulses
+    CheckingForMissingHeartbeatsWorker.new.perform
+  end
 
   def authenticate_user!
     if user_signed_in?

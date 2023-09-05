@@ -5,11 +5,17 @@ A Heartbeat server, designed to recieve pulses from clients and send out alerts 
 DEFAULT_TO_ADDRESS          => email(s) to be alerted
 DEFAULT_FROM_ADDRESS        => sender email
 TASK_INACTIVE_AFTER_MINUTES => Time before task is considered inactive. Default: 30 minutes
+NO_CLOCK_AND_WORKERS        => If not running redis/sidekiq server and clock server, set env to 'true' to still allow operations. Missing pulses will be checked for during a recieving pulse event.
 ```
  
-# Server: Two API routes
-- GET or POST: /heartbeat?token=<client_token>
-- GET or POST: /failure?token=<client_token>
+# Server: External API routes
+- POST: /heartbeat
+  - PARAMS/PAYLOAD:
+    - token: <client_token>
+- POST: /failure
+  - PARAMS/PAYLOAD:
+    - token: <client_token>
+
 
 When clients do not check-in, on the `/heartbeat` route,  within the `TASK_INACTIVE_AFTER_MINUTES` deadline, an email will be sent out to `DEFAULT_TO_ADDRESS` with an alert.
 
@@ -20,5 +26,6 @@ When clients do not check-in, on the `/heartbeat` route,  within the `TASK_INACT
 
 
 # Client Implementation:
-- From the client, ping `/heartbeat?token=<client_token>` to check-in with the server that everything is alright with the client
-- From the client, ping `/failure?token=<client_token>`  to check-in with the server that something has gone horribly wrong, and to immediately alert the `DEFAULT_TO_ADDRESS` addresses.
+- From the client, post `/heartbeat` to check-in with the server that everything is alright with the client
+- From the client, post `/failure`  to check-in with the server that something has gone horribly wrong, and to immediately alert the `DEFAULT_TO_ADDRESS` addresses.
+

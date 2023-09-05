@@ -96,5 +96,6 @@ module TaskMonitor
     # config.action_mailer.delivery_method = :smtp
     # config.action_mailer.default_url_options = { host: host }
 
+    config.clock_or_workers_running = ENV['NO_CLOCK_AND_WORKERS'] != 'true'
   end
 end

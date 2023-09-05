@@ -9,8 +9,6 @@ class TasksController < ApplicationController
       t&.mark_active
     end
 
-    Task.check_for_missing_heartbeats
-
     render json: nil, status: :ok and return
   end
 
@@ -20,7 +18,7 @@ class TasksController < ApplicationController
       t = Task.find_by_token(params[:token])
       t&.mark_inactive
     end
-    Task.check_for_missing_heartbeats
+
     render json: nil, status: :ok and return
   end
 
@@ -29,11 +27,13 @@ class TasksController < ApplicationController
     t&.mark_active
     redirect_to root_url
   end
+
   def mark_as_ignore
     t = Task.find(params[:id])
     t&.mark_ignore
     redirect_to root_url
   end
+
   def mark_as_unignore
     t = Task.find(params[:id])
     t&.mark_unignore
